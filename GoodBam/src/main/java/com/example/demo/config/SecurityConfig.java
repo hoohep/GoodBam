@@ -39,53 +39,45 @@ public class SecurityConfig {
 	@Autowired
 	private JwtUtil jwtUtil;
 	
+	// 인증을 통해 무언가에 접근할 수 있도록 customizer 하는 작업
 	//css, js, 이미지 (정적리소스) => 정적리소스가 제대로 적용되지 않는 상황 발생
+	// 정적리소스에는 security가 적용되지 않도록 막아주는 작업
 	@Bean //수동으로 객체 생성
 	public WebSecurityCustomizer webSecurityCustomizer(){
 		return (web)-> web.ignoring().requestMatchers("/static/**");
 	}
 	
-	@Bean
+	@Bean                    
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-		http
-		.csrf(csrf -> csrf.disable()) //GET요청 제외 요청으로부터 보호, csrf 토큰 포함(위조요청), rest api 사용시에는 설정x
-		//세션 관리 상태 없음 구성
+		http		
 		.sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(
 				SessionCreationPolicy.STATELESS))
 		.formLogin(form-> form.disable()) //로그인 폼 비활성화
-		.httpBasic(AbstractHttpConfigurer::disable) //HTTP 기반 기본 인증 비활성화
+		.httpBasic(AbstractHttpConfigurer::disable) //HTTP 기반 기본 인증 비활성화		
 		.addFilterBefore(new JwtAuthenticationFilter(userDetailService, jwtUtil), UsernamePasswordAuthenticationFilter.class)
 		.addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class)
-		.authorizeHttpRequests(auth -> auth
-				//.dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
-				//.requestMatchers("/", "/join", "/login", "/api/member/join").permitAll() //인증 없이도 접근 가능한 경로 설정
+		
+		// 요청에 대해서 인증을 확인하는 필터! 
+		.authorizeHttpRequests(auth -> auth				
+							
 				.requestMatchers("/api/member/*").permitAll() //인증 없이도 접근 가능한 경로 설정
-				.requestMatchers("/admin").hasRole("ADMIN") //ADMIN 권한이 있을 경우에만 접근 가능한 경로 설정
-				.anyRequest().authenticated() //그외의 요청은 무조권 인증 확인하겠다!
+				// 관리자 기능 x 
+				//.requestMatchers("/admin").hasRole("ADMIN") //adimin 경로로 왔을 때 ADMIN 권한이 있을 경우에만 접근 가능한 경로 설정
+				.anyRequest().authenticated() //그 외의 요청은 무조건 인증 확인하겠다!
 		)
+		// 예외상황
 		.exceptionHandling(exceptionHandling-> exceptionHandling
 				.authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
 		;
-//		.formLogin(form -> form
-//				.loginPage("/login") //로그인 페이지 설정
-//				.defaultSuccessUrl("/") //로그인 성공 시 요청 url (index.jsp)
-//				.failureUrl("/login") //로그인 실패 시 요청 url (login.jsp)
-//				.permitAll()
-//		)
-//		.logout(logout -> logout
-//				.logoutUrl("/logout") //로그아웃 url 설정
-//				.logoutSuccessUrl("/login") //로그아웃 후 url (login.jsp)
-//				.permitAll()
-//		)
-//		.userDetailsService(userDetailService);
-		
 		return http.build();
 	}
 	
+	// 비밀번호 암호화 시켜서 DB에 저장
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+	
 	
 	//CORS - Cross-origin resource sharing (교차 출처 리소스 공유)
 	//도메인 밖의 다른 도메인으로부터 요청할 수 있게 허용
@@ -104,7 +96,7 @@ public class SecurityConfig {
     }
 	
 	
-	//로그인 시 사용 => jwt(web token)
+	//로그인 시 사용 => rest API 사용할 때는 jwt(web token) 사용! 
 	
 	//인증 공급자 : UserDetailsService, PasswordEncoder 활용 인증 논리 구현
 	@Bean

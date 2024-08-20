@@ -30,22 +30,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		
+		                                        // react - headers! 
 		String autorizationHeader = request.getHeader("Authorization"); //토큰
 		
 		if(autorizationHeader!=null && autorizationHeader.startsWith("Bearer ")) {
-			
+			// 문자 자르기
 			String token = autorizationHeader.substring(7);
 			
-			//token 유효성 검증
+			//token 유효성 검증(사용할 수 있는지)
 			if(jwtUtil.validateToken(token, request)) {
 				
-				//token 에서 Claim 파싱 후 이메일만 반환
-				String email = jwtUtil.getUserId(token);
+				//token 에서 Claim 파싱 후 id만 반환
+				String id = jwtUtil.getUserId(token);
 				
-				UserDetails userDetails = detailService.loadUserByUsername(email);
+				UserDetails userDetails = detailService.loadUserByUsername(id);
 				
-				if(userDetails!=null) { //토큰 발급
+				if(userDetails!=null) { //로그인 가능한 사용자에게 토큰 발급
 					UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
 					new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 					

@@ -22,9 +22,10 @@ public class UserService {
 	public void join(Users users) {
 		
 		users.setPassword(bCryptPasswordEncoder.encode(users.getPassword()));
-		users.setRole(Role.ROLE_USER);
+		//users.setRole(Role.ROLE_USER);
 		
-		if(!repository.existsByEmail(users.getUsername())) {
+		// id중복 아닐시 저장
+		if(!repository.existsById(users.getUsername())) {
 			repository.save(users);
 		}
 		

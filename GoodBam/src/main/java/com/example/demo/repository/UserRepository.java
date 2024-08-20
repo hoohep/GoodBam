@@ -9,7 +9,8 @@ import com.example.demo.model.Users;
 
 @Repository
 public interface UserRepository extends JpaRepository<Users, Long>{
-	Optional<Users> findByEmail(String email);
+	Optional<Users> findById(String id);
 	
-	boolean existsByEmail(String email);
+	//id 값 중복확인
+	boolean existsById(String id);
 }
