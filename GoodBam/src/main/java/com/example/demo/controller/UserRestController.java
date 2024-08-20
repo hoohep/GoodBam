@@ -19,8 +19,7 @@ import com.example.demo.service.UserService;
 
 @RestController
 public class UserRestController {
-	// React랑 연결할 때 쓰일 RestController
-	
+
 	@Autowired
 	private UserService service; 
 	
@@ -41,13 +40,12 @@ public class UserRestController {
 	}
 	
 	@PostMapping("/api/member/login")
-	// 로그인 메서드 - 로그인할 때 넘겨오는 값을 DTO로 설정
 	public ResponseEntity<String> login(LoginDTO dto) {
 		authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(dto.getId(), dto.getPassword())
+                new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword())
             );
 
-        final UserDetails userDetails = detailService.loadUserByUsername(dto.getId());
+        final UserDetails userDetails = detailService.loadUserByUsername(dto.getEmail());
         String token = jwtUtil.createAccessToken(userDetails);
 
         return ResponseEntity.status(HttpStatus.OK).body(token);
@@ -58,7 +56,11 @@ public class UserRestController {
 
         return "ok";
 	}
-	//
+	
+	@PostMapping("/kakaologin")
+	public void kakaologin(String code) {
+		System.out.println(code);
+	}
 }
 
 

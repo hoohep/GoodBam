@@ -20,6 +20,11 @@ public class UserController {
 	@Autowired
 	private UserService service;
 	
+//	@PostMapping("/api/member/join")
+//	public void join(Users users) {
+//		System.out.println(users.toString());
+//		service.join(users);
+//	}
 	
 	@GetMapping("/logout")
 	public void logout(HttpServletRequest request, HttpServletResponse response) {

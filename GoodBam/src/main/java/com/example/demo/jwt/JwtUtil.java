@@ -27,7 +27,7 @@ public class JwtUtil { //토큰 생성, 유효한 토큰, 사용자 정보확인
 	//ExpTime, 암호화 전 key로 사용할 문자열
 	public JwtUtil(@Value("${jwt.secret}") String secretKey,
 			@Value("${jwt.expiration_time}")long accessTokenExpTime) {
-		 
+		
 		this.accessTokenExpTime = accessTokenExpTime;
 		byte[] keyBytes = Decoders.BASE64.decode(secretKey);
 		this.key = Keys.hmacShaKeyFor(keyBytes); //HMAC 알고리즘 적용한 Key 객체 생성
@@ -42,7 +42,7 @@ public class JwtUtil { //토큰 생성, 유효한 토큰, 사용자 정보확인
     	//Claims : 정보는 담는 조각, 토큰 생성 시 사용할 정보를 담기 위함
         Claims claims = Jwts.claims();
         claims.put("memberId", ((Users) user).getId());
-        claims.put("id", user.getUsername());
+        claims.put("email", user.getUsername());
         claims.put("role", ((Users) user).getRole());
 
         ZonedDateTime now = ZonedDateTime.now();  //현재 시간 기준 실제 만료 날짜 구하기 위함
@@ -57,7 +57,7 @@ public class JwtUtil { //토큰 생성, 유효한 토큰, 사용자 정보확인
                 .compact();
     }
 	
-	//받은 토큰에서 Claims 파싱 (토큰을 받았을 때 유효한지)
+	//받은 토큰에서 Claims 파싱 
 	public Claims parseClaims(String accessToken) {
         try {
             return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
@@ -66,8 +66,8 @@ public class JwtUtil { //토큰 생성, 유효한 토큰, 사용자 정보확인
         }
     }
 	
-	public String getUserId(String token) { //username(id)을 가지고 오기위한 메서드
-        return parseClaims(token).get("id", String.class);
+	public String getUserId(String token) { //username(email)을 가지고 오기위한 메서드
+        return parseClaims(token).get("email", String.class);
     }
 	
 	//유효 토큰 확인
