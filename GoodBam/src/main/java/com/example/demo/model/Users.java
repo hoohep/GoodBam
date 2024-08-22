@@ -32,7 +32,7 @@ public class Users implements UserDetails{ //Security에서 사용자 정보를 
 	@Column(name="u_uid", nullable=false, unique=true, length=30)
 	private String email;
 	
-	@Column(name="u_upw", nullable=false)
+	@Column(name="u_upw", nullable=true)
 	private String password;
 	
 	@Column(name="u_uname", nullable=false)
