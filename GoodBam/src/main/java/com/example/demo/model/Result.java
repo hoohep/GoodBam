@@ -1,6 +1,8 @@
 package com.example.demo.model;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
+
+//import java.security.Timestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,8 +26,8 @@ public class Result {
 	@Column
 	private Long r_id;
 	
-	@Column(nullable=false, unique=true)
-	private String r_u_uid;
+	@Column(name="r_u_uid", nullable=false, unique=true)
+	private String RUUid;
 	
 	@Column(nullable=false)
 	private String r_imp_nm;
@@ -36,7 +38,7 @@ public class Result {
 	@Column(nullable=false)
 	private String r_chat;
 	
-	@Column(nullable=false)
-	private Timestamp r_credate;
+	@Column(name="r_credate", nullable=false)
+	private Timestamp RCredate;
 	
 }

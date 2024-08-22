@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import java.sql.Timestamp;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,9 +10,9 @@ import com.example.demo.model.Result;
 
 @Repository
 public interface ResultRepository extends JpaRepository<Result, Long>{
-	Optional<Result> findByR_u_uidANDR_credate(String r_u_uid, String r_credate);
+	Optional<Result> findByRUUidAndRCredate(String r_u_uid, Timestamp r_credate);
 	
-	boolean existByR_u_uidANDR_credate(String r_u_uid, String r_credate);
+	boolean existsByRUUidAndRCredate(String r_u_uid, Timestamp r_credate);
 	
 	
 }

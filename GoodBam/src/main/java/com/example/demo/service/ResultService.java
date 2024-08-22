@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.sql.Timestamp;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.demo.model.ResultDTO;
@@ -14,13 +16,13 @@ public class ResultService {
 	private ResultDTO resultdto;
 	
 	// 결과화면
-	public ResultDTO result(String r_u_uid, String r_credate ) {
+	public void result(String r_u_uid, Timestamp r_credate ) {
 		
-		if(!repository.existByR_u_uidANDR_credate(r_u_uid, r_credate)){
+		if(!repository.existsByRUUidAndRCredate(r_u_uid, r_credate)){
 			
-			return null;
+//			return null;
 		}
-		return resultdto;
+//		return resultdto;
 		
 	}
 	
