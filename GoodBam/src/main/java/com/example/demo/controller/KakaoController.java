@@ -33,6 +33,8 @@ public class KakaoController {
 	// 로그인 요청(클라이언트로부터 인가코드 받고 서버에선 클라이언트로 토큰 보내고 토큰 사용해서 프로필 불러와서 DB에 저장 )
 	@PostMapping(value = "/api/member/kakaologin")
 	public ResponseEntity<String> KakaoLogin(KakaoAcDTO kakaoAcDTO) throws Exception {
+		// 메서드 중복 출력 확인용
+	    System.out.println("KakaoLogin 메서드 호출됨");
 		// 클라이언트에서 받은 인가 코드
 		String code = kakaoAcDTO.getCode();
 		System.out.println("인가 코드 : " + code);
