@@ -1,6 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.KakaoAcDTO;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,20 +48,31 @@ public class KakaoController {
 		// 로그 출력으로 응답 확인
 		String accessToken = accessTokenResponse.getBody();
 		System.out.println("토큰 : " + accessToken);
-///////
-//		// 액세스 토큰을 사용해 사용자 정보 요청
-//		HttpHeaders userInfoHeaders = new HttpHeaders();
-//		userInfoHeaders.set("Authorization", "Bearer " + accessToken);
-//		// 요청을 위한 엔티티 생성	
-//		HttpEntity<String> userInfoEntity = new HttpEntity<>(userInfoHeaders);
-//		// 사용자 정보 요청
-//		ResponseEntity<String> userInfoResponse = restTemplate.exchange(KAKAO_USER_INFO_URL, HttpMethod.GET,
-//				userInfoEntity, String.class);
-//		
-//		// 사용자 정보 JSON 문자열
-//		String userInfoJson = userInfoResponse.getBody();
-//		System.out.println("사용자 정보 JSON: " + userInfoJson);
-//
+/////
+		ObjectMapper objectMapper = new ObjectMapper();
+        // JSON 파싱하여 JsonNode 객체 생성
+        JsonNode rootNode = objectMapper.readTree(accessToken);        
+        // access_token 값 추출
+        String accessToken2 = rootNode.path("access_token").asText();        
+        // 추출된 access_token 출력
+        System.out.println("Access Token: " + accessToken2);
+		
+		
+		
+		RestTemplate restTemplate2 = new RestTemplate();
+		// 액세스 토큰을 사용해 사용자 정보 요청
+		HttpHeaders userInfoHeaders = new HttpHeaders();
+		userInfoHeaders.set("Authorization", "Bearer " + accessToken2);
+		// 요청을 위한 엔티티 생성	
+		HttpEntity<String> userInfoEntity = new HttpEntity<>(userInfoHeaders);
+		// 사용자 정보 요청
+		ResponseEntity<String> userInfoResponse = restTemplate2.exchange(KAKAO_USER_INFO_URL, HttpMethod.GET,
+				userInfoEntity, String.class);
+		
+		// 사용자 정보 JSON 문자열
+		String userInfoJson = userInfoResponse.getBody();
+		System.out.println("사용자 정보 JSON: " + userInfoJson);
+
 //		// Jackson ObjectMapper를 사용해 JSON 문자열을 DTO로 변환
 //		ObjectMapper objectMapper = new ObjectMapper();
 //		KakaoUserInfoDTO userInfo = objectMapper.readValue(userInfoJson, KakaoUserInfoDTO.class);
@@ -69,7 +83,7 @@ public class KakaoController {
 //
 //		System.out.println("이메일 확인 : " + email);
 //		System.out.println("닉네임 확인 : " + nickname);
-/////		
+///		
 		// 받은 액세스 토큰을 클라이언트로 반환
 		return ResponseEntity.ok(accessToken);
 	}
