@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 //import java.security.Timestamp;
 
@@ -22,23 +23,23 @@ import lombok.Setter;
 public class Result {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column
-	private Long r_id;
-	
-	@Column(name="r_u_uid", nullable=false, unique=true)
-	private String RUUid;
-	
-	@Column(nullable=false)
-	private String r_imp_nm;
-	
-	@Column(nullable=false)
-	private String r_imp_chg;
-	
-	@Column(nullable=false)
-	private String r_chat;
-	
-	@Column(name="r_credate", nullable=false)
-	private Timestamp RCredate;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "r_id")
+    private Long id;
+
+    @Column(name = "r_u_uid", nullable = false)
+    private String email;  // 필드 이름은 CamelCase로 유지, DB 컬럼은 snake_case
+
+    @Column(name = "r_imp_nm", nullable = false)
+    private String impname;
+
+    @Column(name = "r_imp_chg", nullable = false)
+    private String impvalue;
+
+    @Column(name = "r_chat", nullable = false)
+    private String rchat;
+
+    @Column(name = "r_credate", nullable = false)
+    private LocalDate rdate;
 	
 }

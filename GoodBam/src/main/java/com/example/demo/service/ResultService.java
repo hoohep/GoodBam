@@ -1,28 +1,30 @@
 package com.example.demo.service;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import com.example.demo.model.ResultDTO;
+import com.example.demo.model.Result;
 import com.example.demo.repository.ResultRepository;
 
+@Service
 public class ResultService {
  
 	@Autowired
 	private ResultRepository repository;
 	
-	@Autowired
-	private ResultDTO resultdto;
+
 	
 	// 결과화면
-	public void result(String r_u_uid, Timestamp r_credate ) {
+	public Result result(String id, LocalDate date ) {
 		
-		if(!repository.existsByRUUidAndRCredate(r_u_uid, r_credate)){
+		if(!repository.existsByEmailAndRdate(id, date)){
 			
-//			return null;
+			return null;
 		}
-//		return resultdto;
+		Result result = repository.findByEmailAndRdate(id, date);
+		return result;
 		
 	}
 	
