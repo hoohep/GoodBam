@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.KakaoAcDTO;
+import com.example.demo.model.Users;
+import com.example.demo.service.UserService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -8,12 +10,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 
 @RestController
 public class KakaoController {
+
+	@Autowired
+	private UserService userService;
 
 	// Kakao 토큰을 요청할 URL
 	private final String KAKAO_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
@@ -29,7 +35,7 @@ public class KakaoController {
 	public ResponseEntity<String> KakaoLogin(KakaoAcDTO kakaoAcDTO) throws Exception {
 		// 클라이언트에서 받은 인가 코드
 		String code = kakaoAcDTO.getCode();
-		System.out.println("인가 코드 : "+code);
+		System.out.println("인가 코드 : " + code);
 		// 인가 코드를 사용해 액세스 토큰을 요청하기 위한 준비
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
@@ -47,43 +53,47 @@ public class KakaoController {
 
 		// 로그 출력으로 응답 확인
 		String accessToken = accessTokenResponse.getBody();
-		System.out.println("토큰 : " + accessToken);
-/////
+		System.out.println("토큰 JSON : " + accessToken);
+
 		ObjectMapper objectMapper = new ObjectMapper();
-        // JSON 파싱하여 JsonNode 객체 생성
-        JsonNode rootNode = objectMapper.readTree(accessToken);        
-        // access_token 값 추출
-        String accessToken2 = rootNode.path("access_token").asText();        
-        // 추출된 access_token 출력
-        System.out.println("Access Token: " + accessToken2);
-		
-		
-		
-		RestTemplate restTemplate2 = new RestTemplate();
+		// JSON 파싱하여 JsonNode 객체 생성
+		JsonNode tokenNode = objectMapper.readTree(accessToken);
+		// access_token 값 추출
+		String accessToken2 = tokenNode.path("access_token").asText();
+		// 추출된 access_token 출력
+		System.out.println("토큰값: " + accessToken2);
+
 		// 액세스 토큰을 사용해 사용자 정보 요청
+		RestTemplate restTemplate2 = new RestTemplate();
 		HttpHeaders userInfoHeaders = new HttpHeaders();
 		userInfoHeaders.set("Authorization", "Bearer " + accessToken2);
-		// 요청을 위한 엔티티 생성	
+		// 요청을 위한 엔티티 생성
 		HttpEntity<String> userInfoEntity = new HttpEntity<>(userInfoHeaders);
 		// 사용자 정보 요청
 		ResponseEntity<String> userInfoResponse = restTemplate2.exchange(KAKAO_USER_INFO_URL, HttpMethod.GET,
 				userInfoEntity, String.class);
-		
+
 		// 사용자 정보 JSON 문자열
 		String userInfoJson = userInfoResponse.getBody();
 		System.out.println("사용자 정보 JSON: " + userInfoJson);
 
-//		// Jackson ObjectMapper를 사용해 JSON 문자열을 DTO로 변환
-//		ObjectMapper objectMapper = new ObjectMapper();
-//		KakaoUserInfoDTO userInfo = objectMapper.readValue(userInfoJson, KakaoUserInfoDTO.class);
-//
-//		// 이메일과 닉네임 추출
-//		String email = userInfo.getKakao_account().getEmail();
-//		String nickname = userInfo.getProperties().getNickname();
-//
-//		System.out.println("이메일 확인 : " + email);
-//		System.out.println("닉네임 확인 : " + nickname);
-///		
+		// 사용자 정보에서 email과 nickname 추출
+		JsonNode userInfoNode = objectMapper.readTree(userInfoJson);
+		String nickname = userInfoNode.path("properties").path("nickname").asText();
+		String email = userInfoNode.path("kakao_account").path("email").asText();
+
+		// email과 nickname 출력
+		System.out.println("닉네임: " + nickname);
+		System.out.println("이메일: " + email);
+
+		// Users 객체 생성 후 DB에 저장
+		Users kakaoUser = new Users();
+		kakaoUser.setEmail(email); // u_uid -> email
+		kakaoUser.setName(nickname); // u_uname -> nickname
+
+		// 카카오 사용자 회원가입 로직 호출
+		userService.joinKakao(kakaoUser);
+
 		// 받은 액세스 토큰을 클라이언트로 반환
 		return ResponseEntity.ok(accessToken);
 	}
