@@ -19,19 +19,28 @@ public class UserService {
 	@Autowired
 	private PasswordEncoder bCryptPasswordEncoder;
 	
-	//회원가입
+	// 일반 사용자 회원가입
 	public void join(Users users) {
-		
 		users.setPassword(bCryptPasswordEncoder.encode(users.getPassword()));
 		users.setRole(Role.ROLE_USER);
 		users.setClassify(Classify.ROLE_GENERAL);
 		
-		
+		// 이메일로 중복 여부를 체크
 		if(!repository.existsByEmail(users.getUsername())) {
 			repository.save(users);
 		}
 		
 	}
+	// 카카오 사용자 회원가입
+    public void joinKakao(Users users) {
+        users.setPassword(null); // 카카오 로그인에는 패스워드가 필요 없음
+        users.setRole(Role.ROLE_USER);
+        users.setClassify(Classify.ROLE_KAKAO);
+     // 이메일로 중복 여부를 체크
+        if (!repository.existsByEmail(users.getUsername())) {
+            repository.save(users); // 중복이 아닌 경우 저장
+        }
+    }
 }
 
 
