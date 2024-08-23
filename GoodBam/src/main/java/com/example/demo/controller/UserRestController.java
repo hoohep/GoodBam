@@ -57,10 +57,10 @@ public class UserRestController {
         return "ok";
 	}
 	
-	@PostMapping("/kakaologin")
-	public void kakaologin(String code) {
-		System.out.println(code);
-	}
+//	@PostMapping("/kakaologin")
+//	public void kakaologin(String code) {
+//		System.out.println(code);
+//	}
 }
 
 
