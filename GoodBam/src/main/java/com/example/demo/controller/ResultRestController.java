@@ -59,15 +59,16 @@ public class ResultRestController {
 	public ResponseEntity<List<Result>> resultList(HttpServletRequest request) {
 		String authorizationHeader = request.getHeader("Authorization");
 
+		String email = null;
+		
 		if (authorizationHeader != null & authorizationHeader.startsWith("Bearer")) {
 			String token = authorizationHeader.substring(7);
-			String email = jwtUtil.getUserId(token);
+			email = jwtUtil.getUserId(token);
 		}
 		
-		String email = null;
 		// DB에서 데이터 가져오기 (List형태)
 		List<Result> resultList = service.resultList(email);
-		
+		System.out.println(resultList.get(1).getRdate());
 		if(resultList != null) {
 			return ResponseEntity.status(HttpStatus.OK).body(resultList); 
 		} else {

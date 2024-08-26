@@ -17,9 +17,6 @@ public interface ResultRepository extends JpaRepository<Result, Long>{
 	
     // 수면분석결과 리스트 
 	List<Result> findByEmail(String email);
-	boolean existsByEmail(String email);
-	
-	
-    
+	boolean existsByEmail(String email);    
     
 }

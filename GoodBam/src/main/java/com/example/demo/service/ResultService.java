@@ -34,9 +34,9 @@ public class ResultService {
 		}
 		// DB에 값 존재하는 경우 데이터 List<result> 형태로 넘기기
 		List<Result> resultList = repository.findByEmail(email);
-		return resultList;
+		return resultList;		
 		
 	}
-	
+
 	
 }
