@@ -1,12 +1,15 @@
 package com.example.demo.controller;
 
+import com.example.demo.jwt.JwtUtil;
 import com.example.demo.model.KakaoAcDTO;
 import com.example.demo.model.Users;
+import com.example.demo.service.UserDetailService;
 import com.example.demo.service.UserService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -20,7 +23,12 @@ public class KakaoController {
 
 	@Autowired
 	private UserService userService;
-
+	@Autowired
+	private UserDetailService detailService;
+	
+	@Autowired
+	private JwtUtil jwtUtil;
+	
 	// Kakao 토큰을 요청할 URL
 	private final String KAKAO_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
 	// Kakao API의 클라이언트 키
@@ -96,8 +104,22 @@ public class KakaoController {
 		// 카카오 사용자 회원가입 로직 호출
 		userService.joinKakao(kakaoUser);
 
+		// 사용자의 이메일을 기반으로 UserDetails 객체를 가져와 JWT 토큰 생성
+        UserDetails userDetails = detailService.loadUserByUsername(email);
+        String jwtToken = jwtUtil.createAccessToken(userDetails);
+		
+        System.out.println("서버 발급 토큰 : "+jwtToken);
+        
+        // JWT 토큰에서 이메일과 역할 추출
+        String userEmail = jwtUtil.getUserId(jwtToken);
+        String userRole = jwtUtil.getUserRole(jwtToken);
+
+        // 추출한 이메일과 역할 출력
+        System.out.println("토큰에 담긴 이메일 : " + userEmail);
+        System.out.println("토큰에 담긴 역할 : " + userRole);
+        
 		// 받은 액세스 토큰을 클라이언트로 반환
-		return ResponseEntity.ok(accessToken);
+		return ResponseEntity.ok(jwtToken);
 	}
 
 }

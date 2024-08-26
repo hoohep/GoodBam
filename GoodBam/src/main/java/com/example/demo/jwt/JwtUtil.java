@@ -41,7 +41,7 @@ public class JwtUtil { //토큰 생성, 유효한 토큰, 사용자 정보확인
     	
     	//Claims : 정보는 담는 조각, 토큰 생성 시 사용할 정보를 담기 위함
         Claims claims = Jwts.claims();
-        claims.put("memberId", ((Users) user).getId());
+//        claims.put("memberId", ((Users) user).getId());
         claims.put("email", user.getUsername());
         claims.put("role", ((Users) user).getRole());
 
@@ -69,6 +69,10 @@ public class JwtUtil { //토큰 생성, 유효한 토큰, 사용자 정보확인
 	public String getUserId(String token) { //username(email)을 가지고 오기위한 메서드
         return parseClaims(token).get("email", String.class);
     }
+	
+	public String getUserRole(String token) { //role(admin, user)를 가지고 오기위한 메서드
+	    return parseClaims(token).get("role", String.class);
+	}
 	
 	//유효 토큰 확인
 	public boolean validateToken(String token, HttpServletRequest request) {
