@@ -46,7 +46,7 @@ public class ResultRestController {
 		
 		// DB에서 데이터 가져오기
 		Result result = service.result(email, currentDate);
-
+		System.out.println(result.getRchat());
 		if (result != null) {
 			return ResponseEntity.status(HttpStatus.OK).body(result);
 		} else {

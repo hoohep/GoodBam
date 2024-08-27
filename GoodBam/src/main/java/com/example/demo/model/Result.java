@@ -10,6 +10,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +29,11 @@ public class Result {
     @Column(name = "r_id")
     private Long id;
 
+	@ManyToOne
+	@JoinColumn(name = "r_u_uid", referencedColumnName = "u_uid",
+				insertable = false, updatable = false)
+	private Users user; 
+	
     @Column(name = "r_u_uid", nullable = false)
     private String email;  // 필드 이름은 CamelCase로 유지, DB 컬럼은 snake_case
 
