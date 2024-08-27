@@ -41,28 +41,28 @@ public class KakaoController {
 	// 로그인 요청(클라이언트로부터 인가코드 받고 서버에선 클라이언트로 토큰 보내고 토큰 사용해서 프로필 불러와서 DB에 저장 )
 	@PostMapping(value = "/api/member/kakaologin")
 	public ResponseEntity<String> KakaoLogin(KakaoAcDTO kakaoAcDTO) throws Exception {
-		// 메서드 중복 출력 확인용
-	    System.out.println("KakaoLogin 메서드 호출됨");
+		// 메서드 중복 출력 확인용*JwtExceptionFilter 수정 후 해결완료)
+		// System.out.println("KakaoLogin 메서드 호출됨");
+		
 		// 클라이언트에서 받은 인가 코드
 		String code = kakaoAcDTO.getCode();
 		System.out.println("인가 코드 : " + code);
 		// 인가 코드를 사용해 액세스 토큰을 요청하기 위한 준비
+		// HTTP 통신을 위한 도구로 RESTful API 웹 서비스와의 상호작용을 쉽게 외부 도메인에서 데이터를 가져오거나 전송할 때 사용되는 스프링 프레임워크의 클래스
 		RestTemplate restTemplate = new RestTemplate();
+		// 카카오에 액세스 토큰을 요청하기 위한 파라미터 설정(헤더, 바디 설정)
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Content-Type", "application/x-www-form-urlencoded");
-
-		// 카카오에 액세스 토큰을 요청하기 위한 파라미터 설정
 		String requestBody = "grant_type=authorization_code" + "&client_id=" + KAKAO_API_KEY + "&redirect_uri="
 				+ REDIRECT_URI + "&code=" + code;
-
 		// 요청을 위한 엔티티 생성 (헤더와 바디 포함)
 		HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
 		// 액세스 토큰 요청
-		ResponseEntity<String> accessTokenResponse = restTemplate.exchange(KAKAO_TOKEN_URL, HttpMethod.POST,
+		ResponseEntity<String> accessTokenRequest = restTemplate.exchange(KAKAO_TOKEN_URL, HttpMethod.POST,
 				requestEntity, String.class);
 
-		// 로그 출력으로 응답 확인
-		String accessToken = accessTokenResponse.getBody();
+		// 로그 출력으로 토큰 응답 확인
+		String accessToken = accessTokenRequest.getBody();
 		System.out.println("토큰 JSON : " + accessToken);
 
 		ObjectMapper objectMapper = new ObjectMapper();
