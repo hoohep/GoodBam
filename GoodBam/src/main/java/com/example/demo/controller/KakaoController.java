@@ -108,9 +108,7 @@ public class KakaoController {
         UserDetails userDetails = detailService.loadUserByUsername(email);
         String jwtToken = jwtUtil.createAccessToken(userDetails);
 		
-        System.out.println("서버 발급 토큰 : "+jwtToken);
-        
-        // JWT 토큰에서 이메일과 역할 추출
+        // 토큰이 잘 생성됐는지 확인하기 위해 JWT 토큰에서 이메일과 역할 추출
         String userEmail = jwtUtil.getUserId(jwtToken);
         String userRole = jwtUtil.getUserRole(jwtToken);
 
