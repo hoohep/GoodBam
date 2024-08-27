@@ -77,7 +77,7 @@ public class ResultRestController {
 		List<Result> resultList = service.resultList(email);
 		System.out.println(resultList.get(1).getRdate());
 		if(resultList != null) {
-			// 값이 있을경우 body에 실어서 react
+			// 값이 있을경우 body에 실어서 react로 보내기
 			return ResponseEntity.status(HttpStatus.OK).body(resultList); 
 		} else {
 			return ResponseEntity.status(HttpStatus.OK).body(null);

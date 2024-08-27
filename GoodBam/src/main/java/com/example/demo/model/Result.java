@@ -29,7 +29,7 @@ public class Result {
     @Column(name = "r_id")
     private Long id;
 
-	@ManyToOne
+	@ManyToOne // RESULT 엔티티가 여러 인스턴스의 Users 엔티티를 참조할 수 있음을 나타내는 어노테이션
 	@JoinColumn(name = "r_u_uid", referencedColumnName = "u_uid",
 				insertable = false, updatable = false)
 	private Users user; 

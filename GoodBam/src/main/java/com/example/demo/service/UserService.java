@@ -21,6 +21,7 @@ public class UserService {
 	
 	// 일반 사용자 회원가입
 	public void join(Users users) {
+		// 사용자 비밀번호 암호화 후 저장
 		users.setPassword(bCryptPasswordEncoder.encode(users.getPassword()));
 		users.setRole(Role.ROLE_USER);
 		users.setClassify(Classify.ROLE_GENERAL);
