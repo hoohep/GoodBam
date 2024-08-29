@@ -21,48 +21,36 @@ import com.example.demo.service.UserService;
 public class UserRestController {
 
 	@Autowired
-	private UserService service; 
-	
+	private UserService service;
+
 	@Autowired
 	private AuthenticationManager authenticationManager;
-	
+
 	@Autowired
 	private UserDetailService detailService;
-	
+
 	@Autowired
 	private JwtUtil jwtUtil;
-	
+
+	// 회원가입 요청
 	@PostMapping("/api/member/join")
 	public ResponseEntity<String> join(Users users) {
-		
+		// 회원가입 기능 로직 호출
 		service.join(users);
 		return ResponseEntity.status(HttpStatus.OK).body(null);
 	}
-	
+
+	// 로그인 요청
 	@PostMapping("/api/member/login")
 	public ResponseEntity<String> login(LoginDTO dto) {
-		authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword())
-            );
-
-        final UserDetails userDetails = detailService.loadUserByUsername(dto.getEmail());
-        String token = jwtUtil.createAccessToken(userDetails);
-
-        return ResponseEntity.status(HttpStatus.OK).body(token);
+		// 사용자가 제공한 이메일과 비밀번호를 기반으로 인증 시도
+		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword()));
+		// DB에서 정보 조회 로직 호출
+		final UserDetails userDetails = detailService.loadUserByUsername(dto.getEmail());
+		// 토큰 발급
+		String token = jwtUtil.createAccessToken(userDetails);
+		// 토큰 반환
+		return ResponseEntity.status(HttpStatus.OK).body(token);
 	}
-	
-	@GetMapping("/test")
-	public String test(){
 
-        return "ok";
-	}
-	
 }
-
-
-
-
-
-
-
-
