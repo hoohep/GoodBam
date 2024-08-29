@@ -39,17 +39,23 @@ public class Import {
 	@Column(name = "i_step", nullable = false) // 걸음수
 	private float step;
 	
+	@Column(name = "i_distance", nullable = false) // 걸은거리
+	private float distance;
+	
+	@Column(name = "i_steptime", nullable = false) // 걸은시간
+	private float steptime;
+	
 	@Column(name = "i_sleep_efficiency", nullable = false) // 수면효율
 	private float sleepeff;
 	
-	@Column(name = "i_height", nullable = false) // 산장
+	@Column(name = "i_height", nullable = true) // 산장
 	private float height;
 	
-	@Column(name="i_gender",nullable=false) // 성별
+	@Column(name="i_gender",nullable=true) // 성별
 	@Enumerated(EnumType.STRING) 
 	private GenderClassify genderclassify; // MAN, WOMAN 
 	
-	@Column(name = "i_age", nullable = false) // 연령
+	@Column(name = "i_age", nullable = true) // 연령
 	private float age;
 	
 	@Column(name = "i_weight", nullable = false) // 체중
