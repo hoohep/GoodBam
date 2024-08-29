@@ -27,7 +27,7 @@ public class Import {
 	@Column(name = "i_id")
 	private Long id;
 	
-//	@Column(name = "i_u_uid", nullable = false, unique = true, length = 30)
+//	@Column(name = "i_u_uid", nullable = false, length = 30)
 //	private String email;
 	
 	@Column(name = "i_regdate", nullable = false) // 날짜

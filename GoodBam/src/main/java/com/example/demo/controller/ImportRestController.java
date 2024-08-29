@@ -31,6 +31,7 @@ public class ImportRestController {
 		// importRequest ==> POSTMAN으로 전달받은 데이터 KEY VALUE
 		// DB에서 사용자 조회
 		// userEmail ==> 전달받은 데이터 중 Email 값
+		System.out.println(importRequest);
 		String userEmail = importRequest.getUser().getUsername();
 		// userOptional ==> UserRepository 클래스의 findByEmail를 통해 이메일로 사용자 정보를 조회
 		Optional<Users> userOptional = userRepository.findByEmail(userEmail);
