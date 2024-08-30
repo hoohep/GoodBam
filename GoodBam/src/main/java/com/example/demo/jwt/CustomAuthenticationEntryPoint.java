@@ -50,7 +50,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint{
         }
 		
 	}
-	
+	// 응답의 상태 코드와 메시지를 JSON 형식으로 설정하여 클라이언트에 전송하는 메소드
     private void setResponse(HttpServletResponse response, Code code) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

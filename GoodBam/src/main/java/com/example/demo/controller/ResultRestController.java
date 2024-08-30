@@ -66,7 +66,7 @@ public class ResultRestController {
 		String email = null;
 		
 		// 넘어 온 값에서 토큰 처리하기
-		if (authorizationHeader != null & authorizationHeader.startsWith("Bearer")) {
+		if (authorizationHeader != null & authorizationHeader.startsWith("Bearer ")) {
 			// 토큰 값 앞에 "Bearer" 지우기
 			String token = authorizationHeader.substring(7);
 			// 넘어온 token에서 email값만 파싱하기
@@ -75,7 +75,6 @@ public class ResultRestController {
 		
 		// DB에서 데이터 가져오기 (List형태)
 		List<Result> resultList = service.resultList(email);
-		System.out.println(resultList.get(1).getRdate());
 		if(resultList != null) {
 			// 값이 있을경우 body에 실어서 react로 보내기
 			return ResponseEntity.status(HttpStatus.OK).body(resultList); 
