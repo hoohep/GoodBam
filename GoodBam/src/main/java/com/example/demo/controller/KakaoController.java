@@ -101,7 +101,7 @@ public class KakaoController {
 		kakaoUser.setEmail(email); // u_uid -> email
 		kakaoUser.setName(nickname); // u_uname -> nickname
 
-		// 카카오 사용자 회원가입 로직 호출
+		// 카카오 사용자 회원가입 서비스 로직 호출
 		userService.joinKakao(kakaoUser);
 
 		// 사용자의 이메일을 기반으로 UserDetails 객체를 가져와 JWT 토큰 생성
