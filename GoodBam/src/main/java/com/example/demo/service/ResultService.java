@@ -36,5 +36,10 @@ public class ResultService {
 		return resultList;
 
 	}
+	
+	// 수면분석결과 데이터 저장
+	public void saveresult(Result result) {
+		repository.save(result);
+	}
 
 }
