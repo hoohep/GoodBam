@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -29,12 +30,16 @@ public class KakaoController {
 	@Autowired
 	private JwtUtil jwtUtil;
 	
+	// properties에서 Kakao API 키를 불러오기(보안)
+    @Value("${kakao.api.key}")
+    private String kakaoApiKey;
+    
 	// Kakao 토큰을 요청할 URL
 	private final String KAKAO_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
-	// Kakao API의 클라이언트 키
-	private final String KAKAO_API_KEY = "0196bd96b83188ce5806bb730eff40d5";
+//	// Kakao API의 클라이언트 키
+//	private final String KAKAO_API_KEY = "0196bd96b83188ce5806bb730eff40d5";
 	// Kakao에서 인가 코드를 받을 때 사용했던 리다이렉트 URI
-	private final String REDIRECT_URI = "http://localhost:3000/kakao";
+	private final String REDIRECT_URI = "https://springreact-bqaya4buech6gdcm.koreacentral-01.azurewebsites.net/kakao";
 	// Kakao 사용자 정보를 요청할 URL
 	private final String KAKAO_USER_INFO_URL = "https://kapi.kakao.com/v2/user/me";
 
@@ -53,7 +58,7 @@ public class KakaoController {
 		// 카카오에 액세스 토큰을 요청하기 위한 파라미터 설정(헤더, 바디 설정)
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Content-Type", "application/x-www-form-urlencoded");
-		String requestBody = "grant_type=authorization_code" + "&client_id=" + KAKAO_API_KEY + "&redirect_uri="
+		String requestBody = "grant_type=authorization_code" + "&client_id=" + kakaoApiKey + "&redirect_uri="
 				+ REDIRECT_URI + "&code=" + code;
 		// 요청을 위한 엔티티 생성 (헤더와 바디 포함)
 		HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
