@@ -29,7 +29,7 @@ public class Import {
 	
 //	@Column(name = "i_u_uid", nullable = false, length = 30)
 //	private String email;
-	
+// 모델이 바껴서 신장, 연령, 나이는 사용하지않게 되었지만 컬럼 날리려면 테이블 DROP후 재작업해야해서 nullable만 TRUE로 수정
 	@Column(name = "i_regdate", nullable = false) // 날짜
 	private LocalDate regdate;
 	
