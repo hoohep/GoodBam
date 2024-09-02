@@ -78,7 +78,7 @@ public class SecurityConfig {
 	public CorsFilter corsFilter() {
 		CorsConfiguration config = new CorsConfiguration();
 		config.setAllowCredentials(true);
-		config.addAllowedOrigin("http://localhost:3000");// 리액트 서버
+		config.addAllowedOrigin("https://springreact-bqaya4buech6gdcm.koreacentral-01.azurewebsites.net");// 리액트 서버
 		config.addAllowedHeader("*");
 		config.addAllowedMethod("*");
 

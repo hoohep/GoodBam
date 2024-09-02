@@ -25,7 +25,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
-@RequestMapping("/api/member/import")
+@RequestMapping
 public class ImportRestController {
 
 	@Autowired
@@ -37,7 +37,7 @@ public class ImportRestController {
 	@Autowired
 	private ResultService resultservice;
 
-	@PostMapping
+	@PostMapping("/api/member/import")
 	public ResponseEntity<String> importData(@RequestBody Import importRequest) {
 		// importRequest ==> POSTMAN으로 전달받은 데이터 KEY VALUE
 		// DB에서 사용자 조회
