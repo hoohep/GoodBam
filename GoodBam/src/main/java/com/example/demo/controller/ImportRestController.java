@@ -5,16 +5,24 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.example.demo.model.Import;
+import com.example.demo.model.Result;
 import com.example.demo.model.Users;
 import com.example.demo.repository.ImportRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.ResultService;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping("/api/member/import")
@@ -25,12 +33,16 @@ public class ImportRestController {
 
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private ResultService resultservice;
 
 	@PostMapping
 	public ResponseEntity<String> importData(@RequestBody Import importRequest) {
 		// importRequest ==> POSTMAN으로 전달받은 데이터 KEY VALUE
 		// DB에서 사용자 조회
 		// userEmail ==> 전달받은 데이터 중 Email 값
+		System.out.println(importRequest);
 		String userEmail = importRequest.getUser().getUsername();
 		// userOptional ==> UserRepository 클래스의 findByEmail를 통해 이메일로 사용자 정보를 조회
 		Optional<Users> userOptional = userRepository.findByEmail(userEmail);
@@ -56,6 +68,24 @@ public class ImportRestController {
 		
 		// Import 객체를 데이터베이스에 저장
 		importRepository.save(importRequest);
+		
+		RestTemplate restTemplate = new RestTemplate();
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Content-Type", "application/json");
+		Import requestBody = importRequest;
+		HttpEntity<Import> requestEntity = new HttpEntity<>(requestBody, headers);
+		ResponseEntity<Result> flastRequest = restTemplate.exchange("http://127.0.0.1:5000/resultrequest", HttpMethod.POST,
+				requestEntity, Result.class);
+
+		Result flaskResponse = flastRequest.getBody();
+		flaskResponse.setEmail(userEmail);
+		flaskResponse.setRdate(LocalDate.now());
+		resultservice.saveresult(flaskResponse);
+		
+
+		
+		
+		
 
 		return ResponseEntity.ok("데이터 저장 완료");
 

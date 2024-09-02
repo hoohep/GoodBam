@@ -43,10 +43,13 @@ public class Result {
     @Column(name = "r_imp_chg", nullable = false)
     private String impvalue;
 
-    @Column(name = "r_chat", nullable = false)
+    @Column(name = "r_chat", nullable = false, columnDefinition = "TEXT")
     private String rchat;
 
     @Column(name = "r_credate", nullable = false)
     private LocalDate rdate;
+    
+    @Column(name = "r_pred", nullable = false)
+    private String prediction;
 	
 }
