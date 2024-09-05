@@ -19,8 +19,19 @@ public class UserService {
 	@Autowired
 	private PasswordEncoder bCryptPasswordEncoder;
 	
+	// 예외 상황 커스텀 정의
+	public class EmailAlreadyExistsException extends RuntimeException {
+	    public EmailAlreadyExistsException(String message) {
+	        super(message);
+	    }
+	}
+		
 	// 일반 사용자 회원가입
 	public void join(Users users) {
+		// id 중복 여부 체크
+		if(repository.existsByEmail(users.getUsername())) {
+			throw new EmailAlreadyExistsException("no");
+		}
 		// 사용자 비밀번호 암호화 후 저장
 		users.setPassword(bCryptPasswordEncoder.encode(users.getPassword()));
 		users.setRole(Role.ROLE_USER);

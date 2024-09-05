@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +17,7 @@ import com.example.demo.model.LoginDTO;
 import com.example.demo.model.Users;
 import com.example.demo.service.UserDetailService;
 import com.example.demo.service.UserService;
+import com.example.demo.service.UserService.EmailAlreadyExistsException;
 
 @RestController
 public class UserRestController {
@@ -40,6 +42,12 @@ public class UserRestController {
 		return ResponseEntity.status(HttpStatus.OK).body(null);
 	}
 
+	// 이메일 중복 예외 처리 핸들러
+	@ExceptionHandler(EmailAlreadyExistsException.class)
+	public ResponseEntity<String> handleEmailAlreadyExistsException(EmailAlreadyExistsException ex){
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+	}
+	
 	// 로그인 요청
 	@PostMapping("/api/member/login")
 	public ResponseEntity<String> login(LoginDTO dto) {
