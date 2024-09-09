@@ -38,15 +38,11 @@ public class UserRestController {
 	@PostMapping("/api/member/join")
 	public ResponseEntity<String> join(Users users) {
 		// 회원가입 기능 로직 호출
-		service.join(users);
-		return ResponseEntity.status(HttpStatus.OK).body(null);
+		String result = service.join(users);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 
-	// 이메일 중복 예외 처리 핸들러
-	@ExceptionHandler(EmailAlreadyExistsException.class)
-	public ResponseEntity<String> handleEmailAlreadyExistsException(EmailAlreadyExistsException ex){
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-	}
 	
 	// 로그인 요청
 	@PostMapping("/api/member/login")

@@ -27,19 +27,21 @@ public class UserService {
 	}
 		
 	// 일반 사용자 회원가입
-	public void join(Users users) {
+	public String join(Users users) {
 		// id 중복 여부 체크
-		if(repository.existsByEmail(users.getUsername())) {
-			throw new EmailAlreadyExistsException("no");
-		}
+		
 		// 사용자 비밀번호 암호화 후 저장
 		users.setPassword(bCryptPasswordEncoder.encode(users.getPassword()));
 		users.setRole(Role.ROLE_USER);
 		users.setClassify(Classify.ROLE_GENERAL);
 		
 		// 이메일로 중복 여부를 체크
-		if(!repository.existsByEmail(users.getUsername())) {
+		if(repository.existsByEmail(users.getUsername())) {
+			return "no";
+		}
+		else {
 			repository.save(users);
+			return "ok";
 		}
 		
 	}
