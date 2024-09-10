@@ -59,12 +59,12 @@ public class ImportRestController {
 			importRequest.setRegdate(LocalDate.now());
 		}
 		 // 현재 날짜와 사용자 정보를 기준으로 데이터가 이미 존재하는지 확인
-        boolean dataExists = importRepository.existsByUserAndRegdate(user, importRequest.getRegdate());
-
-        if (dataExists) {
-            // 이미 해당 날짜에 데이터가 존재하는 경우
-            return ResponseEntity.status(409).body("해당 날짜에 이미 저장된 데이터가 존재합니다.");
-        }
+//        boolean dataExists = importRepository.existsByUserAndRegdate(user, importRequest.getRegdate());
+//
+//        if (dataExists) {
+//            // 이미 해당 날짜에 데이터가 존재하는 경우
+//            return ResponseEntity.status(409).body("해당 날짜에 이미 저장된 데이터가 존재합니다.");
+//        }
 		
 		// Import 객체를 데이터베이스에 저장
 		importRepository.save(importRequest);
@@ -74,7 +74,7 @@ public class ImportRestController {
 		headers.set("Content-Type", "application/json");
 		Import requestBody = importRequest;
 		HttpEntity<Import> requestEntity = new HttpEntity<>(requestBody, headers);
-		ResponseEntity<Result> flastRequest = restTemplate.exchange("http://127.0.0.1:5000/resultrequest", HttpMethod.POST,
+		ResponseEntity<Result> flastRequest = restTemplate.exchange("https://flaskgoodbam-cqa4fhdkfkeha6f9.koreacentral-01.azurewebsites.net/resultrequest", HttpMethod.POST,
 				requestEntity, Result.class);
 
 		Result flaskResponse = flastRequest.getBody();
